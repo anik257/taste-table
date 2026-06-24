@@ -64,12 +64,12 @@ export const staff: Staff[] = [
   { id: "s8", name: "Liam O'Connor", email: "liam@resto.app", phone: "+1 555 0108", position: "Cashier", salary: 2900, joiningDate: "2024-04-04", status: "Inactive", avatar: avatar("liam") },
 ];
 
-const sampleItems = (): { items: Order["items"]; subtotal: number } => {
+const sampleItems = (seed: number): { items: Order["items"]; subtotal: number } => {
   const pool = foods.slice(0, 10);
-  const count = 1 + Math.floor(Math.random() * 4);
-  const items = Array.from({ length: count }, () => {
-    const f = pool[Math.floor(Math.random() * pool.length)];
-    const qty = 1 + Math.floor(Math.random() * 3);
+  const count = 1 + (seed % 4);
+  const items = Array.from({ length: count }, (_, k) => {
+    const f = pool[(seed * 3 + k) % pool.length];
+    const qty = 1 + ((seed + k) % 3);
     return { foodId: f.id, name: f.name, price: f.price, quantity: qty };
   });
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -79,7 +79,7 @@ const sampleItems = (): { items: Order["items"]; subtotal: number } => {
 const orderStatuses: Order["status"][] = ["Pending", "Preparing", "Ready", "Served", "Paid", "Cancelled"];
 
 export const orders: Order[] = Array.from({ length: 24 }, (_, i) => {
-  const { items, subtotal } = sampleItems();
+  const { items, subtotal } = sampleItems(i);
   const tax = +(subtotal * 0.08).toFixed(2);
   const t = tables[i % tables.length];
   const s = staff[i % staff.length];
