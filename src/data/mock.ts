@@ -83,8 +83,8 @@ export const orders: Order[] = Array.from({ length: 24 }, (_, i) => {
   const tax = +(subtotal * 0.08).toFixed(2);
   const t = tables[i % tables.length];
   const s = staff[i % staff.length];
-  const d = new Date();
-  d.setHours(d.getHours() - i * 2);
+  const baseTs = Date.UTC(2026, 5, 24, 18, 0, 0);
+  const d = new Date(baseTs - i * 2 * 3600_000);
   return {
     id: `ORD-${1000 + i}`,
     tableId: t.id,
